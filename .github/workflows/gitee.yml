@@ -8,15 +8,14 @@ on:
         - main
 
 jobs:
-  github-to-gitee:
+  user:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - github: kbcx
-            gitee: kbcx
+          - github: xiexianbin
+            gitee: xiexianbin
     steps:
-
       - name: Cache src repo
         uses: actions/cache@v3
         id: cache
@@ -28,11 +27,44 @@ jobs:
       - name: User xiexianbin mirror
         uses: Yikun/hub-mirror-action@master
         with:
-          src: github/xiexianbin
-          dst: gitee/xiexianbin
+          src: github/${{ matrix.github }}
+          dst: gitee/${{ matrix.gitee }}
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
           account_type: user
+          black_list: "openbilibili"
+
+      - name: Print cache path
+        run: |
+          ls -la ${{ github.workspace }}/hub-mirror-cache
+
+  orgs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - github: kbcx
+            gitee: kb-cx
+          - github: godeepl
+            gitee: godeepl
+          - github: openlava
+            gitee: openlava
+          - github: OpenRDF
+            gitee: OpenRDF
+          - github: x-actions
+            gitee: x-actions
+          - github: x-mirrors
+            gitee: x-mirrors
+          - github: yaochi
+            gitee: yaochi-mirrors
+    steps:
+      - name: Cache src repo
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: ${{ github.workspace }}/hub-mirror-cache
+          key: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-${{ steps.info.outputs.time }}
+          restore-keys: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-
 
       - name: Organization ${{ matrix.github }} mirror
         uses: Yikun/hub-mirror-action@master
