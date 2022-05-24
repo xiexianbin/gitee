@@ -13,12 +13,28 @@ jobs:
     strategy:
       matrix:
         include:
-          - github: xiexianbin
-            gitee: xiexianbin
           - github: kbcx
             gitee: kbcx
     steps:
-      - name: Organization mirror
+
+      - name: Cache src repo
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: ${{ github.workspace }}/hub-mirror-cache
+          key: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-${{ steps.info.outputs.time }}
+          restore-keys: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-
+
+      - name: User xiexianbin mirror
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/xiexianbin
+          dst: gitee/xiexianbin
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          account_type: user
+
+      - name: Organization ${{ matrix.github }} mirror
         uses: Yikun/hub-mirror-action@master
         with:
           src: github/${{ matrix.github }}
@@ -26,3 +42,7 @@ jobs:
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
           account_type: org
+
+      - name: Print cache path
+        run: |
+          ls -la ${{ github.workspace }}/hub-mirror-cache
