@@ -77,4 +77,9 @@ jobs:
 
       - name: Print cache path
         run: |
-          ls -la ${{ github.workspace }}/hub-mirror-cache
+          dir="${{ github.workspace }}/hub-mirror-cache"
+          if [ -d "${dir}" ]; then
+            ls -la ${dir}
+          else
+            echo "empty"
+          fi
