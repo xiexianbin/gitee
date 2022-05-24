@@ -1,5 +1,7 @@
 # gitee
 
+[![gitee](https://github.com/xiexianbin/gitee/actions/workflows/gitee.yml/badge.svg)](https://github.com/xiexianbin/gitee/actions/workflows/gitee.yml)
+
 sync all my github repo to gitee.
 
 ## config

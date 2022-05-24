@@ -33,6 +33,7 @@ jobs:
           dst_token: ${{ secrets.GITEE_TOKEN }}
           account_type: user
           black_list: "openbilibili"
+          clone_style: ssh
 
       - name: Print cache path
         run: |
@@ -74,6 +75,7 @@ jobs:
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
           account_type: org
+          clone_style: ssh
 
       - name: Print cache path
         run: |
