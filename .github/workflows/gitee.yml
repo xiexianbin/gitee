@@ -20,14 +20,15 @@ jobs:
         uses: actions/cache@v3
         id: cache
         with:
-          path: ${{ github.workspace }}/hub-mirror-cache
+          path: ${{ github.workspace }}/git-mirrors-cache
           key: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-${{ steps.info.outputs.time }}
           restore-keys: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-
 
       - name: User xiexianbin mirror
-        uses: Yikun/hub-mirror-action@master
+        uses: x-actions/git-mirrors@v0.2.4
         with:
           src: github/${{ matrix.github }}
+          src_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           dst: gitee/${{ matrix.gitee }}
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
@@ -37,7 +38,12 @@ jobs:
 
       - name: Print cache path
         run: |
-          ls -la ${{ github.workspace }}/hub-mirror-cache
+          dir="${{ github.workspace }}/git-mirrors-cache"
+          if [ -d "${dir}" ]; then
+            tree -L 2 ${dir}
+          else
+            echo "empty"
+          fi
 
   orgs:
     runs-on: ubuntu-latest
@@ -58,19 +64,22 @@ jobs:
             gitee: x-mirrors
           - github: yaochi
             gitee: yaochi-mirrors
+          - github: x-ca
+            gitee: x-ca
     steps:
       - name: Cache src repo
         uses: actions/cache@v3
         id: cache
         with:
-          path: ${{ github.workspace }}/hub-mirror-cache
+          path: ${{ github.workspace }}/git-mirrors-cache
           key: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-${{ steps.info.outputs.time }}
           restore-keys: ${{ runner.os }}-${{ steps.info.outputs.key }}-cache-
 
       - name: Organization ${{ matrix.github }} mirror
-        uses: Yikun/hub-mirror-action@master
+        uses: x-actions/git-mirrors@v0.2.4
         with:
           src: github/${{ matrix.github }}
+          src_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           dst: gitee/${{ matrix.gitee }}
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
@@ -79,9 +88,9 @@ jobs:
 
       - name: Print cache path
         run: |
-          dir="${{ github.workspace }}/hub-mirror-cache"
+          dir="${{ github.workspace }}/git-mirrors-cache"
           if [ -d "${dir}" ]; then
-            ls -la ${dir}
+            tree -L 2 ${dir}
           else
             echo "empty"
           fi
