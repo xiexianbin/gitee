@@ -33,7 +33,7 @@ jobs:
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
           account_type: user
-          black_list: "openbilibili"
+          black_list: "openbilibili,review.xiexianbin.cn,Micro8,website"
           clone_style: ssh
 
       - name: Print cache path
